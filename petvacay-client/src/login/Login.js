@@ -48,7 +48,9 @@ export class Login extends React.Component {
         || this.state.password === undefined || this.state.password === '';
 
 
-    toRedirect = () => this.state.status === 200 && window.location.replace('http://localhost:3000/');
+    toRedirect = () => {
+        this.state.status === 200 && window.location.replace('http://localhost:3000/user/info');
+    };
 
     render() {
         return (

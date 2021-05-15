@@ -164,7 +164,6 @@ export class Registration extends React.Component {
                                 label="Замовник"
                                 value="1"
                                 name="formHorizontalRadios"
-                                checked={this.state.roleId===1}
                                 onChange={this.setRole}
                                 id="1"
                             />
@@ -173,7 +172,6 @@ export class Registration extends React.Component {
                                 label="Виконавець"
                                 value="2"
                                 name="formHorizontalRadios"
-                                checked={this.state.roleId===2}
                                 onChange={this.setRole}
                                 id="2"
                             />
@@ -185,12 +183,12 @@ export class Registration extends React.Component {
                     {' '}
                     {' '}
                     {this.isEmptyField() && <div className="alert alert-primary" role="alert">Всі поля повинні бути заповненими</div>}
-                    {this.arePasswordsEqual() && <div className="alert alert-primary" role="alert">Паролі повинні співпадати</div>}
+                    {!this.arePasswordsEqual() && <div className="alert alert-primary" role="alert">Паролі повинні співпадати</div>}
                     {this.state.status === 400 && <div className="alert alert-primary" role="alert">Обліковий запис для такого email вже існує</div>}
                 </div>
 
                 <button
-                    className="btn btn-success"
+                    className="btn btn-outline-danger"
                     onClick={this.insertRegistrationData}
                     disabled={!this.isValidForm()}
                 >
@@ -198,7 +196,7 @@ export class Registration extends React.Component {
                 </button>
 
                 <div>
-                    {' '}
+                    <br/>
                     {this.isVisible()
                 && <div className="alert alert-primary" role="alert">Для активації акаунту перевірте вашу поштову скриньку</div>}
                 </div>

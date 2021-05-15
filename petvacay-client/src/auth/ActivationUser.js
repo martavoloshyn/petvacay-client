@@ -13,7 +13,6 @@ export class ActivationUser extends React.Component {
     }
 
     getData = () => {
-        console.log("ssss");
         axios.put(`http://localhost:8080/petvacay/api/v1/registration/activation?activationCode=${this.props.match.params.activationCode}`,
             { withCredentials: true })
             .then((response) => {
