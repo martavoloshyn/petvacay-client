@@ -9,6 +9,7 @@ import { Button } from 'react-bootstrap';
 
 export class CustomerRegistration extends React.Component {
     state = {
+        galleryId: undefined,
         status: undefined,
         city: undefined,
         aboutInfo: undefined,
@@ -23,7 +24,8 @@ export class CustomerRegistration extends React.Component {
             birthDate : moment.now().valueOf(),
             isExotic : false,
             petSizeId : 1
-        }]
+        }],
+        files:[]
     };
 
     setCity = (e) => {
@@ -116,6 +118,10 @@ export class CustomerRegistration extends React.Component {
         });
     };
 
+    setFile = (e) => {
+        this.setState({ files: e.target.files });
+    };
+
     insertRegistrationData = () => {
         const data = {
             userId: this.props.userId,
@@ -128,17 +134,42 @@ export class CustomerRegistration extends React.Component {
         axios.post('http://localhost:8080/petvacay/api/v1/registration/customer',
             data,
             { withCredentials: true })
-            .then((response) => {
+            .then(((response) => {
                 this.setState({
                     status: response.status
                 });
-            })
-            .catch((err) => {
-                //const errors = err.data.message;
-                // const
-                this.setState({status: err.status});
+            }))
+            .then((response) => {
+                axios.get(`http://localhost:8080/petvacay/api/v1/user/${this.props.userId}/gallery`,
+                    { withCredentials: true }).then((response) => {
+                    this.setState({ galleryId: response.data });
+                }).then((response) => {
+                    const fileData = new FormData();
+                    Array.from(this.state.files).forEach((file, i) => {
+                        console.log(file);
+                        fileData.append('files', file);
+                    });
+                    const config = {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                        },
+                    };
+                    console.log(fileData);
+                    axios.post(
+                        `http://localhost:8080/petvacay/api/v1/gallery/${this.state.galleryId}/`,
+                        fileData,
+                      //  config,
+                        { withCredentials: true }
+                    ).then((response) => {
+                        this.setState(
+                            {
+                                status: response.status,
+                            },
+                        );
+                    }).then((response)=> {window.location.replace('http://localhost:3000');});
+                });
             });
-        window.location.replace('http://localhost:3000');
+
     };
 
     render() {
@@ -194,6 +225,35 @@ export class CustomerRegistration extends React.Component {
                             </Accordion.Collapse>
                         </Card>
                     </Accordion>
+                    <br/>
+                    <label
+                        htmlFor="file-upload"
+                        style={{
+                            border: '1px solid #ccc',
+                            width: '200px',
+                            borderRadius: '4px',
+                            boxSizing: 'border-box',
+                            padding: '6px 30px',
+                            cursor: 'pointer',
+                        }}
+                    >
+                        Загрузити файли
+                    </label>
+                    <input align="left"
+                        type="file"
+                        id="file-upload"
+                        style={{ display: 'none', margin: '10px 0px 60px 60px' }}
+                        multiple
+                        onChange={this.setFile}
+                    />
+                    <div>
+                        {Array.from(this.state.files).map(file => (
+                            <ul>
+                                <li>{file.name}</li>
+                            </ul>
+                        ))}
+
+                    </div>
                     <br/>
                     <Button
                         variant="outline-danger"

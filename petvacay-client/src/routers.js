@@ -8,6 +8,7 @@ import {Registration} from "./auth/Registration";
 import {ActivationUser} from "./auth/ActivationUser";
 import {CustomerRegistration} from "./auth/CustomerRegistration";
 import {UserInfo} from "./auth/UserInfo";
+import {PerformerRegistration} from "./auth/PerformerRegistration";
 
 export class Routers extends React.Component {
     render() {
